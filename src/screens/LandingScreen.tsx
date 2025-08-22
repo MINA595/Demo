@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Image, SafeAreaView, TouchableOpacity } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Button } from '../components/Button';
 
 type Translations = {
@@ -61,7 +61,7 @@ export const LandingScreen: React.FC<LandingScreenProps> = ({
           </Animatable.View>
         </View>
         <Animatable.View animation="bounceIn" delay={animationDelay * 3}>
-          <Ionicons name="school" size={50} color={colors.primary} />
+          <MaterialCommunityIcons name="brain" size={50} color={colors.primary} />
         </Animatable.View>
         <Animatable.Text 
           animation="fadeInDown" 
