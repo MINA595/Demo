@@ -1,9 +1,10 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, SafeAreaView, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Image, SafeAreaView, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Button } from '../components/Button';
+import { AntDesign } from '@expo/vector-icons';
 
 type Translations = {
   welcome: string;
@@ -26,6 +27,7 @@ export const LandingScreen: React.FC<LandingScreenProps> = ({
   onToggleTheme, 
   translations 
 }) => {
+  const [email, setEmail] = useState('');
   const colors = {
     background: theme === 'dark' ? '#000000' : '#FFFFFF',
     text: theme === 'dark' ? '#FFFFFF' : '#000000',
@@ -39,92 +41,65 @@ export const LandingScreen: React.FC<LandingScreenProps> = ({
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-      <Animatable.View 
-        animation="fadeIn" 
-        duration={1200}
-        delay={animationDelay}
-        style={styles.header}
-      >
-        <View style={styles.toggleContainer}>
-          <Animatable.View animation="fadeIn" delay={animationDelay * 2}>
-            <TouchableOpacity
-              onPress={onToggleTheme}
-              style={[styles.themeButton, { backgroundColor: colors.secondary }]}
-              activeOpacity={0.7}
-            >
-              <Ionicons 
-                name={theme === 'dark' ? 'moon' : 'sunny'} 
-                size={24} 
-                color={colors.text} 
-              />
-            </TouchableOpacity>
-          </Animatable.View>
-        </View>
-        <Animatable.View animation="bounceIn" delay={animationDelay * 3}>
-          <MaterialCommunityIcons name="pyramid" size={50} color={colors.primary} />
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{flex: 1}}>
+        <Animatable.View 
+          animation="fadeIn" 
+          duration={1200}
+          delay={animationDelay}
+          style={styles.header}
+        >
+          <View style={styles.logoBlob} />
+
+          <Animatable.Text 
+            animation="fadeInDown" 
+            delay={animationDelay * 1.5}
+            style={[styles.title, { color: colors.text }]}
+          >
+            Log in or sign up
+          </Animatable.Text>
+
+          <TextInput
+            value={email}
+            onChangeText={setEmail}
+            placeholder="you@example.com"
+            placeholderTextColor={colors.text === '#000000' ? '#9B9B9B' : '#BBBBBB'}
+            style={[styles.input, { backgroundColor: colors.secondary, color: colors.text }]}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            autoCorrect={false}
+          />
+
+          <Button
+            title="Continue"
+            onPress={() => console.log('Continue', email)}
+            style={[styles.continueButton, { backgroundColor: '#000' }]}
+            textStyle={{ color: '#fff', fontWeight: '700' }}
+          />
+
+          <Text style={[styles.orText, { color: colors.text }]}>or</Text>
+
+          <Button
+            title="Continue with Google"
+            onPress={() => console.log('Google')}
+            style={[styles.outlineButton]}
+            textStyle={{ color: colors.text }}
+            icon={<AntDesign name="google" size={18} color="#DB4437" />}
+          />
+
+          <Button
+            title="Continue with Apple"
+            onPress={() => console.log('Apple')}
+            style={[styles.outlineButton]}
+            textStyle={{ color: colors.text }}
+            icon={<AntDesign name="apple1" size={18} color={colors.text} />}
+          />
+
         </Animatable.View>
-        <Animatable.Text 
-          animation="fadeInDown" 
-          delay={animationDelay * 3.5}
-          style={[styles.title, { color: colors.text }]}
-        >
-          {translations.welcome}
-        </Animatable.Text>
-        <Animatable.Text 
-          animation="fadeInDown" 
-          delay={animationDelay * 4}
-          style={[styles.subtitle, { color: colors.text }]}
-        >
-          {translations.subtitle}
-        </Animatable.Text>
-      </Animatable.View>
+      </KeyboardAvoidingView>
 
-      <Animatable.View 
-        animation="fadeInUp" 
-        duration={1000} 
-        delay={500} 
-        style={[styles.features, { backgroundColor: colors.secondary }]}
-      >
-        <View style={styles.featureItem}>
-          <Ionicons name="shield-checkmark" size={24} color={colors.primary} />
-          <Text style={[styles.featureText, { color: colors.text }]}>{translations.secure}</Text>
-        </View>
-        <View style={styles.featureItem}>
-          <Ionicons name="flash" size={24} color={colors.primary} />
-          <Text style={[styles.featureText, { color: colors.text }]}>{translations.fast}</Text>
-        </View>
-        <View style={styles.featureItem}>
-          <Ionicons name="cloud-done" size={24} color={colors.primary} />
-          <Text style={[styles.featureText, { color: colors.text }]}>{translations.cloud}</Text>
-        </View>
-      </Animatable.View>
+  {/* Removed feature list for landing form layout */}
 
-      <Animatable.View 
-        animation="fadeInUp" 
-        duration={1000} 
-        delay={1000} 
-        style={styles.buttonContainer}
-      >
-        <Button 
-          title={translations.getStarted}
-          onPress={() => console.log('Get Started pressed')} 
-          style={{
-            ...styles.button,
-            backgroundColor: colors.primary
-          }}
-        />
-        <Button 
-          title={translations.learnMore}
-          onPress={() => console.log('Learn More pressed')} 
-          style={{
-            ...styles.button,
-            backgroundColor: colors.background,
-            borderWidth: 1,
-            borderColor: colors.primary
-          }}
-          textStyle={{ color: colors.primary }}
-        />
-      </Animatable.View>
+  {/* footer removed */}
     </SafeAreaView>
   );
 };
@@ -208,4 +183,41 @@ const styles = StyleSheet.create({
   button: {
     marginBottom: 10,
   }
+  ,
+  logoBlob: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#000',
+    marginBottom: 18,
+  },
+  input: {
+    width: '90%',
+    height: 48,
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    fontSize: 16,
+    marginTop: 18,
+  },
+  continueButton: {
+    width: '90%',
+    marginTop: 16,
+    borderRadius: 12,
+    paddingVertical: 14,
+  },
+  orText: {
+    marginTop: 12,
+    marginBottom: 8,
+    fontSize: 14,
+    opacity: 0.8,
+  },
+  outlineButton: {
+    width: '90%',
+    marginTop: 8,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#DDD',
+    backgroundColor: 'transparent',
+  },
+  
 });
