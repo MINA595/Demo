@@ -61,7 +61,7 @@ export const LandingScreen: React.FC<LandingScreenProps> = ({
           </Animatable.View>
         </View>
         <Animatable.View animation="bounceIn" delay={animationDelay * 3}>
-          <MaterialCommunityIcons name="currency-usd" size={50} color={colors.primary} />
+          <MaterialCommunityIcons name="pyramid" size={50} color={colors.primary} />
         </Animatable.View>
         <Animatable.Text 
           animation="fadeInDown" 
