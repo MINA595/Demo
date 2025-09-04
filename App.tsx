@@ -7,16 +7,6 @@ import HomeScreen from './src/screens/HomeScreen';
 import { useState, useEffect } from 'react';
 import { Appearance } from 'react-native';
 
-const translations = {
-  welcome: 'Welcome to MyApp',
-  subtitle: 'Your Journey Starts Here',
-  secure: 'Secure & Private',
-  fast: 'Lightning Fast',
-  cloud: 'Cloud Synced',
-  getStarted: 'Get Started',
-  learnMore: 'Learn More'
-};
-
 export default function App() {
   const [theme, setTheme] = useState<'light' | 'dark'>(Appearance.getColorScheme() || 'light');
   const [user, setUser] = useState<any>(null);
@@ -64,7 +54,6 @@ export default function App() {
         <Register 
           theme={theme} 
           onToggleTheme={toggleTheme}
-          translations={translations}
         />
       )}
     </>
