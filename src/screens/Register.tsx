@@ -55,7 +55,7 @@ const Register: React.FC<RegisterProps> = ({
           style={styles.header}
         >
           <Image
-            source={{ uri: 'http://127.0.0.1:54321/storage/v1/object/public/demo//freepik__the-style-is-candid-image-photography-with-natural__15015.png' }}
+            source={{ uri: 'http://127.0.0.1:54321/storage/v1/object/public/fixaway//freepik__the-style-is-candid-image-photography-with-natural__15015.png' }}
             style={styles.logoBlob}
             resizeMode="cover"
             accessibilityLabel="Books icon"

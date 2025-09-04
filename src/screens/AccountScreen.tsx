@@ -103,7 +103,7 @@ const AccountScreen: React.FC<Props> = ({ onClose }) => {
         </View>
 
         <TouchableOpacity style={styles.pill} activeOpacity={0.9}>
-          <Image source={{ uri: 'http://127.0.0.1:54321/storage/v1/object/public/demo//freepik__the-style-is-candid-image-photography-with-natural__15015.png' }} style={styles.pillIcon} />
+          <Image source={{ uri: 'http://127.0.0.1:54321/storage/v1/object/public/fixaway//freepik__the-style-is-candid-image-photography-with-natural__15015.png' }} style={styles.pillIcon} />
           <Text style={styles.pillText}>The new Bing</Text>
           <View style={{ flex: 1 }} />
           <View style={styles.approved}><Text style={styles.approvedText}>Approved</Text></View>
@@ -129,7 +129,7 @@ const AccountScreen: React.FC<Props> = ({ onClose }) => {
       <View style={styles.bottomNav}>
         <TouchableOpacity style={styles.navItem}><Ionicons name="home-outline" size={20} color="#666" /><Text style={styles.navLabel}>Home</Text></TouchableOpacity>
         <TouchableOpacity style={styles.navItem}><Ionicons name="newspaper-outline" size={20} color="#666" /><Text style={styles.navLabel}>News</Text></TouchableOpacity>
-  <TouchableOpacity style={styles.navCenter}><Image source={{ uri: 'http://127.0.0.1:54321/storage/v1/object/public/demo//freepik__the-style-is-candid-image-photography-with-natural__15015.png' }} style={{ width: 36, height: 36 }} /></TouchableOpacity>
+  <TouchableOpacity style={styles.navCenter}><Image source={{ uri: 'http://127.0.0.1:54321/storage/v1/object/public/fixaway//freepik__the-style-is-candid-image-photography-with-natural__15015.png' }} style={{ width: 36, height: 36 }} /></TouchableOpacity>
         <TouchableOpacity style={styles.navItem}><Ionicons name="layers-outline" size={20} color="#666" /><Text style={styles.navLabel}>Tabs</Text></TouchableOpacity>
         <TouchableOpacity style={styles.navItem}><Ionicons name="apps-outline" size={20} color="#666" /><Text style={styles.navLabel}>Apps</Text></TouchableOpacity>
       </View>
