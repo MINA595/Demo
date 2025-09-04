@@ -45,7 +45,7 @@ export const HomeScreen: React.FC = () => {
         </View>
 
         <View style={styles.gridRow}>
-          <TileCard title="Savings" subtitle="Save for a goal" image={require('../../assets/icon.png')} />
+          <TileCard title="Savings" subtitle="Save for a goal" image={require('../../assets/Books.jpg')} />
           <TileCard title="Buy bitcoin" image={require('../../assets/splash-icon.png')} />
         </View>
 

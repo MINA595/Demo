@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { supabase } from '../lib/supabase';
 import { MaterialIcons, FontAwesome5, Ionicons } from '@expo/vector-icons';
@@ -8,6 +8,55 @@ type Props = {
 };
 
 const AccountScreen: React.FC<Props> = ({ onClose }) => {
+  const [name, setName] = useState<string | null>(null);
+  const [email, setEmail] = useState<string | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    const loadProfile = async () => {
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+
+        const userId = user?.id;
+        if (!userId) {
+          if (mounted) {
+            setName(null);
+            setEmail(null);
+          }
+          return;
+        }
+
+        const { data, error } = await supabase.from('profiles').select('name,email').eq('id', userId).single();
+        if (error) {
+          if (mounted) {
+            setName(null);
+            setEmail(user.email || null);
+          }
+          return;
+        }
+        if (!mounted) return;
+        setName((data as any)?.name || null);
+        setEmail((data as any)?.email || user.email || null);
+      } catch (err) {
+        // ignore
+      }
+    };
+
+    loadProfile();
+
+    const listener = supabase.auth.onAuthStateChange(() => {
+      loadProfile();
+    });
+
+    const subscription = (listener as any)?.data?.subscription;
+
+    return () => {
+      mounted = false;
+      subscription?.unsubscribe?.();
+    };
+  }, []);
   const handleSignOut = async () => {
     try {
       await supabase.auth.signOut();
@@ -27,8 +76,8 @@ const AccountScreen: React.FC<Props> = ({ onClose }) => {
           <View style={styles.avatarRow}>
             <View style={styles.avatar} />
             <View style={{ marginLeft: 12 }}>
-              <Text style={styles.name}>John Mobbin</Text>
-              <Text style={styles.email}>john.mobbin1@outlook.com</Text>
+              <Text style={styles.name}>{name || 'Your name'}</Text>
+              <Text style={styles.email}>{email || 'your@email.com'}</Text>
             </View>
           </View>
         </View>
@@ -54,7 +103,7 @@ const AccountScreen: React.FC<Props> = ({ onClose }) => {
         </View>
 
         <TouchableOpacity style={styles.pill} activeOpacity={0.9}>
-          <Image source={require('../../assets/icon.png')} style={styles.pillIcon} />
+          <Image source={{ uri: 'http://127.0.0.1:54321/storage/v1/object/public/demo//freepik__the-style-is-candid-image-photography-with-natural__15015.png' }} style={styles.pillIcon} />
           <Text style={styles.pillText}>The new Bing</Text>
           <View style={{ flex: 1 }} />
           <View style={styles.approved}><Text style={styles.approvedText}>Approved</Text></View>
@@ -80,7 +129,7 @@ const AccountScreen: React.FC<Props> = ({ onClose }) => {
       <View style={styles.bottomNav}>
         <TouchableOpacity style={styles.navItem}><Ionicons name="home-outline" size={20} color="#666" /><Text style={styles.navLabel}>Home</Text></TouchableOpacity>
         <TouchableOpacity style={styles.navItem}><Ionicons name="newspaper-outline" size={20} color="#666" /><Text style={styles.navLabel}>News</Text></TouchableOpacity>
-        <TouchableOpacity style={styles.navCenter}><Image source={require('../../assets/icon.png')} style={{ width: 36, height: 36 }} /></TouchableOpacity>
+  <TouchableOpacity style={styles.navCenter}><Image source={{ uri: 'http://127.0.0.1:54321/storage/v1/object/public/demo//freepik__the-style-is-candid-image-photography-with-natural__15015.png' }} style={{ width: 36, height: 36 }} /></TouchableOpacity>
         <TouchableOpacity style={styles.navItem}><Ionicons name="layers-outline" size={20} color="#666" /><Text style={styles.navLabel}>Tabs</Text></TouchableOpacity>
         <TouchableOpacity style={styles.navItem}><Ionicons name="apps-outline" size={20} color="#666" /><Text style={styles.navLabel}>Apps</Text></TouchableOpacity>
       </View>

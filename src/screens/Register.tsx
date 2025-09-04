@@ -29,6 +29,7 @@ const Register: React.FC<RegisterProps> = ({
   translations 
 }) => {
   const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -53,7 +54,12 @@ const Register: React.FC<RegisterProps> = ({
           delay={animationDelay}
           style={styles.header}
         >
-          <View style={styles.logoBlob} />
+          <Image
+            source={{ uri: 'http://127.0.0.1:54321/storage/v1/object/public/demo//freepik__the-style-is-candid-image-photography-with-natural__15015.png' }}
+            style={styles.logoBlob}
+            resizeMode="cover"
+            accessibilityLabel="Books icon"
+          />
 
           <Animatable.Text 
             animation="fadeInDown" 
@@ -62,6 +68,16 @@ const Register: React.FC<RegisterProps> = ({
           >
             Log in or sign up
           </Animatable.Text>
+
+          <TextInput
+            value={name}
+            onChangeText={setName}
+            placeholder="Full name"
+            placeholderTextColor={colors.text === '#000000' ? '#9B9B9B' : '#BBBBBB'}
+            style={[styles.input, { backgroundColor: colors.secondary, color: colors.text }]}
+            autoCapitalize="words"
+            autoCorrect={false}
+          />
 
           <TextInput
             value={email}
@@ -101,9 +117,17 @@ const Register: React.FC<RegisterProps> = ({
               setLoading(true);
               try {
                 if (mode === 'register') {
-                  const { error } = await supabase.auth.signUp({ email, password });
-                  if (error) throw error;
-                  Alert.alert('Check your email', 'A confirmation email has been sent if required.');
+                    const { data, error } = await supabase.auth.signUp({ email, password });
+                    if (error) throw error;
+
+                    // If signup succeeded and user id is returned, insert profile row
+                    const userId = (data as any)?.user?.id;
+                    if (userId) {
+                      // Insert profile with name and email
+                      await supabase.from('profiles').upsert({ id: userId, email, name });
+                    }
+
+                    Alert.alert('Check your email', 'A confirmation email has been sent if required.');
                 } else {
                   const { error } = await supabase.auth.signInWithPassword({ email, password });
                   if (error) throw error;
@@ -221,7 +245,8 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: '#000',
+  backgroundColor: '#000',
+  overflow: 'hidden',
     marginBottom: 18,
   },
   input: {
