@@ -9,6 +9,9 @@ dist/
 web-build/
 expo-env.d.ts
 
+# Configuration files (contains sensitive credentials)
+app.production.json
+
 # Native
 .kotlin/
 *.orig.*

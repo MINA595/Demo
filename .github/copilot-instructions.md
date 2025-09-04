@@ -4,20 +4,36 @@ Purpose: make an AI coding agent immediately productive in this Expo + Supabase 
 
 1) Big picture
 - This is a small Expo React Native app (TypeScript). Entry: `App.tsx` which chooses between `Register` and `HomeScreen` based on Supabase auth.
-- Supabase client lives under `src/lib/` (`supabase.ts`, `supabase-config.ts`). Auth state is observed in `App.tsx` (supabase.auth.onAuthStateChange) and profiles are upserted in `src/screens/Register.tsx`.
+- Supabase client lives under `src/lib/` (`supabase-config.ts`). Auth state is observed in `App.tsx` (supabase.auth.onAuthStateChange) and profiles are upserted in `src/screens/Register.tsx`.
 - UI is split into `src/screens/*` and reusable UI in `src/components/*` (e.g. `TileCard.tsx`, `Button.tsx`). Assets live in `assets/`.
 
 2) Key files to read first
 - `App.tsx` — app entry, theme toggle, auth listener.
-- `src/lib/supabase.ts` and `src/lib/supabase-config.ts` — how supabase URL/ANON key are read and whether local Supabase is used (env var `USE_LOCAL_SUPABASE`).
+- `src/lib/supabase.ts` — how supabase URL/ANON key are read from app.json configuration.
 - `src/screens/Register.tsx` — sign up / sign in flow; shows how upsert into `profiles` table is performed.
 - `src/screens/HomeScreen.tsx`, `src/components/TileCard.tsx` — patterns for cards and how `image` props are passed.
 - `package.json` — npm scripts for Expo and Supabase CLI (`npm run start`, `npm run supabase:start`, etc.).
 
 3) Run / debug workflows (concrete)
 - Start Expo dev server: `npm run start` (Windows PowerShell). Use `npm run android` / `npm run ios` / `npm run web` to open target.
-- Local Supabase: `npm run supabase:start` / `npm run supabase:stop` / `npm run supabase:status` (these use the supabase CLI via npx). To force the app to use the local instance set `USE_LOCAL_SUPABASE=true` in the environment or update `src/lib/supabase-config.ts`.
-- Environment config: Expo reads runtime values from `app.json` `extra` or `process.env`. The code falls back to placeholder strings if the values are missing — do not assume Supabase keys are present.
+- Environment switching: `npm run dev` (local) / `npm run production:start` (remote) / `npm run status` (check current).
+- Local Supabase: `npm run supabase:start` / `npm run supabase:stop` / `npm run supabase:status` (these use the supabase CLI via npx).
+- Environment config: Expo reads runtime values from `app.json` `extra`. The app automatically detects local vs remote based on URL.
+
+4) Project-specific patterns & gotchas
+- Assets and Metro: image requires use the correct filename and extension. Example: the repo contains `assets/Books.jpg` (capital B). A `require('../../assets/books.png')` may produce Metro errors (unsupported file type). Use `require('../../assets/Books.jpg')` or replace the asset with a valid file.
+- Environment switching: Use `npm run local:setup` or `npm run production:setup` to switch between local and remote Supabase.
+- When registering a user, `Register.tsx` calls `supabase.auth.signUp(...)` then upserts into `profiles` with `supabase.from('profiles').upsert({ id: userId, email, name })`. This is the canonical pattern for creating profile rows in this app.
+- UI conventions: small, self-contained screen files; `TileCard` expects `image` prop to be a `require(...)` result and renders it full-bleed inside `imageWrap`.
+
+5) Integration points
+- Supabase (auth + Postgres) — migrations live under `supabase/migrations/`.
+- Expo — expects `app.json` extras for Supabase keys. See `src/lib/supabase.ts` for exact lookup order.
+
+6) Environment configurations
+- `app.json` — Active configuration (automatically managed by setup scripts)
+- `app.local.json` — Local Supabase configuration (127.0.0.1:54321)
+- `app.production.json` — Remote Supabase configuration (your production instance)
 
 4) Project-specific patterns & gotchas
 - Assets and Metro: image requires use the correct filename and extension. Example: the repo contains `assets/Books.jpg` (capital B). A `require('../../assets/books.png')` may produce Metro errors (unsupported file type). Use `require('../../assets/Books.jpg')` or replace the asset with a valid file.
